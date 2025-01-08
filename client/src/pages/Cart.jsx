@@ -1,10 +1,19 @@
-import { useState } from "react"
+import { useContext, useState } from "react"
+import { UserContext } from "../context/UserContext";
 
 export default function Cart(){
-    const [ user , setUser ] = useState(null);
+    
     const [ items , setItems ] = useState([]);
 
-    // get the user from Authcontext
+    const { user } = useContext(UserContext);
+
+    return (
+        <>
+        <p>{user.userId}</p>
+        <p>{user.email}</p>
+        </>
+    )
+    
 
     
 }
