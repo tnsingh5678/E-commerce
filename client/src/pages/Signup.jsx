@@ -1,6 +1,7 @@
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 export default function Signup(){
     const [ name , setName] = useState("");
@@ -17,9 +18,11 @@ export default function Signup(){
                 password,
                 email
             })
+            toast.success("Account created successfully")
             navigate('/login')
         } catch (error) {
             console.log("Error occured during signup : ",error)
+            toast.error("Try again later")
         }
     }
     return(

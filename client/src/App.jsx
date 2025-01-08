@@ -6,6 +6,8 @@ import Home from './pages/Home'
 import Item from './pages/Item'
 import AddItem from './pages/AddItem'
 import AuthProvider from './context/AuthContext'
+import { ToastContainer } from 'react-toastify'
+
 import './App.css'
 
 function App() {
@@ -13,6 +15,7 @@ function App() {
     
     <Router>
       <AuthProvider>
+        <ToastContainer/>
     <Routes>
     <Route path="/Login" element={<Login/>}/>
     <Route path="/SignUp" element={<Signup/>}/>

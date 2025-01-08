@@ -1,6 +1,7 @@
 import {useState} from "react"
 import axios from "axios"
 import {v4 as uuidv4} from "uuid"
+import { toast } from "react-toastify"
 
 export default function AddItem(){
     const [itemName , setItemName] = useState("");
@@ -21,6 +22,7 @@ export default function AddItem(){
         
         if(!itemName||!quantity||!price||!images){
             setMessage("All fields are required");
+            toast.error("All fileds are required")
             return;
         }
         const itemid = uuidv4();
@@ -42,10 +44,12 @@ export default function AddItem(){
                 }
             })
             setMessage(response.data.message);
+            toast.success("Image uploaded successfully")
 
 
         }catch(error){
             setMessage("Error uploading item: ",error.response.data.message)
+            toast.error("Image upload failed")
         }
     }
 
@@ -57,8 +61,10 @@ export default function AddItem(){
                     quantity,
                     price
             })
+            toast.success("Data updated successfully")
         } catch (error) {
             console.log("Error while uploading item details : ",error.message)
+            toast.error("Data not updated")
         }
         
     }
@@ -70,9 +76,11 @@ export default function AddItem(){
                 itemId
             });
             console.log(response.data.message)
+            toast.success("Image updated successfully")
 
         } catch (error) {
             console.log("Error while updating item image : ",error.message);
+            toast.error("Image not updated")
         }
     }
 
@@ -81,9 +89,11 @@ export default function AddItem(){
             const response = await axios.post('http://localhost:4000/item/deleteitem',{
                 itemId
             });
+            toast.success("Item deleed successfully")
             console.log("Item deleted successfully :",response.data.message);
         } catch (error) {
             console.log("Error while deleting item :",error.message);
+            toast.error("Error while deleting item")
         }
     }
 

@@ -1,6 +1,7 @@
 import {useState} from "react"
 import {useNavigate} from "react-router-dom"
 import axios from "axios"
+import { toast } from "react-toastify"
 
 export default function Login(){
     const [ email , setEmail] = useState("");
@@ -16,10 +17,12 @@ export default function Login(){
                 email
             })
             const { token } = response.data;
-            localStorage.setItem(token);
+            localStorage.setItem('token',token);
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+            toast.success("Login successful")
             navigate('/')
         } catch (error) {
+            toast.error("Login failed. Try again later")
             console.log("Error occured during login ", error)
         }
     }
