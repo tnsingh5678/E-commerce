@@ -1,0 +1,41 @@
+# Ignore .env files
+.env
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+env/
+venv/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+
+# Logs
+*.log
+
+# IDEs and editors
+.vscode/
+.idea/
+
+# Other system files
+*.swp
+*.swo
+
+# Archive files
+*.zip
+*.tar.gz
+*.tar.bz2
+*.rar
+
+# Miscellaneous
+*.bak
+*.tmp
