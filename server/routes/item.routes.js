@@ -7,16 +7,16 @@ import uploadToCloudinary from "../controllers/cloudinary.controller.js"
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-    filenname: function (req,file,cb){
+const storage = multer.memoryStorage({
+    filename: function (req,file,cb){
         cb(null,file.originalname)
     }
 });
 const upload = multer({storage: storage})
 
-router.post('/additem', upload.array('files',5) , async (req,res)=>{
+router.post('/additem', upload.single('file') , async (req,res)=>{
 
-    const { itemName, quantity, price, itemId} = req.body;
+    const { itemName, quantity, price, itemId } = req.body;
 
     if(!itemName||!quantity||!price||!itemId){
         return res.status(404).json({
@@ -26,12 +26,24 @@ router.post('/additem', upload.array('files',5) , async (req,res)=>{
     }
 
     try{
-        let fileUrls = [];
-        for ( let i=0;i<req.files.length;i++){
-            const file =req.files[i];
-            const url = await uploadToCloudinary(file.buffer);
-            fileUrls.push(url);
+        if (!req.file) {
+            return res.status(400).json({
+                message: 'No file uploaded'
+            });
         }
+        //console.log(req.file)
+        let fileUrls = [];
+        const fileBuffer =req.file.buffer;
+        if (!fileBuffer) {
+           // console.log("NO buffer received")
+            return res.status(400).json({
+              message: "No valid file buffer received"
+            });
+        }
+        //console.log("hello")
+        const url = await uploadToCloudinary(fileBuffer);
+        //console.log("ho gya")
+        fileUrls.push(url);
 
         if(fileUrls.length===0){
             return res.status(401).json({
@@ -58,7 +70,7 @@ router.post('/additem', upload.array('files',5) , async (req,res)=>{
     catch(error){
         return res.status(500).json({
             message: "Error while adding item",
-            error: error.message
+            error: error.message      
         });
     }
 

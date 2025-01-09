@@ -8,6 +8,7 @@ import cartRoutes from './routes/cart.routes.js'
 import dbConnection from "./DB/dbConnection.js";
 import authRoutes from "./routes/auth.routes.js"
 import productRoutes from './routes/product.routes.js'
+import mailRoutes from './routes/mail.routes.js'
 dotenv.config();
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/cart',cartRoutes)
 app.use('/item',itemRoutes)
 app.use('/auth',authRoutes)
 app.use('/product',productRoutes)
+app.use('/mail',mailRoutes)
 
 app.get('/test', (req, res) => {
     res.status(200).json({ message: "Server is working!" });
