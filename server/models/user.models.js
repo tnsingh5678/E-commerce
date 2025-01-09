@@ -1,5 +1,6 @@
 import mongoose, { Schema } from "mongoose"
 import Bill from "./bill.models.js";
+import Item from "./item.models.js";
 
 const userSchema = new mongoose.Schema({
     "name":{
@@ -15,16 +16,16 @@ const userSchema = new mongoose.Schema({
         required : true,
         
     },
-    "cart":{
+    "cart":[{
         type:Schema.Types.ObjectId,
-        ref: 'ITEM',
+        ref: 'ECOMITEM',
         required: false
-    },
-    "bill":{
+    }],
+    "bill":[{
         type: Schema.Types.ObjectId,
-        ref: 'BILL',
+        ref: 'ECOMBILL',
         required: false
-    }
+    }]
 },{timestamps: true})
 
 const User = mongoose.model('ECOMUSER',userSchema);

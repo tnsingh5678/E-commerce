@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
+import { UserContext } from "../context/UserContext";
 import axios from "axios";
 
 export default function Item() {
@@ -8,6 +9,11 @@ export default function Item() {
     const [open, setOpen] = useState(false);
     const [option, setOption] = useState('');
     const [categoryOpen, setCategoryOpen] = useState(false);
+    const [cart, setCart] = useState([]); // Initialize cart as an empty array
+    const { user } = useContext(UserContext);
+    
+    
+    
 
     const category = ["Accessories", "Electronics", "Cosmetics", "Grocery"];
 
@@ -15,9 +21,10 @@ export default function Item() {
         const response = await axios.get('http://localhost:4000/product/');
         setItems(response.data.items);
     };
-    useEffect(()=>{
+
+    useEffect(() => {
         getItem();
-    },[])
+    }, []);
 
     const getByCategory = async (category) => {
         const response = await axios.get('http://localhost:4000/product/filter/category', {
@@ -30,7 +37,6 @@ export default function Item() {
         const response = await axios.get('http://localhost:4000/product/filter/price', {
             params: { price }
         });
-        console.log(response)
         setItems(response.data.items);
     };
 
@@ -43,23 +49,8 @@ export default function Item() {
         if (price && !isNaN(price)) {
             getByPrice(price);
         } else {
-            // Handle empty or invalid price input
             alert('Please enter a valid price');
         }
-    };
-
-    const getBySortInc = async () => {
-        const response = await axios.get('http://localhost:4000/product/filter/sort', {
-            params: { type: "INC" }
-        });
-        setItems(response.data.items);
-    };
-
-    const getBySortDec = async () => {
-        const response = await axios.get('http://localhost:4000/product/filter/sort', {
-            params: { type: "DEC" }
-        });
-        setItems(response.data.items);
     };
 
     const toggleDropDown = () => {
@@ -83,6 +74,48 @@ export default function Item() {
         getByPrice(price);  
         setOpen(false);
     };
+
+    const addToCart = (item) => {
+        // Check if the item already exists in the cart
+        const existingItem = cart.find(cartItem => cartItem._id === item._id);
+        if (existingItem) {
+            alert('Item already in cart');
+            return;
+        }
+
+        const newCart = [...cart, item];
+        setCart(newCart);
+        alert(`${item.itemName} added to cart`);
+    };
+
+    const purchaseItems = async () => {
+        if (cart.length === 0) {
+            alert('Your cart is empty!');
+            return;
+        }
+
+        try {
+            for (const item of cart) {
+                console.log(item.itemId)
+                console.log(item.price)
+                console.log(user.userId)
+                console.log(item.quantity)
+                const response = await axios.post('http://localhost:4000/cart/additem', {
+                    userId :user.userId,
+                    itemId: item.itemId,
+                    quantity: item.quantity,
+                    price: item.price,
+                    
+                });
+            }
+            alert('Purchase Successful!');
+            setCart([]); // Clear the cart after successful purchase
+        } catch (error) {
+            alert('Error purchasing items');
+            console.error(error);
+        }
+    };
+
     return (
         <>
             {/* Sort Dropdown */}
@@ -139,34 +172,50 @@ export default function Item() {
 
             {/* Items Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {items.length > 0 ? (
-          items.map((item) => (
-            <div key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
-              {/* Item Image */}
-              <div className="mb-4">
-                <img
-                  src={item.Urls[0]} // Assuming the first URL in the array is the image to display
-                  alt={item.itemName}
-                  className="w-full h-40 object-cover rounded-lg"
-                />
-              </div>
-              
-              {/* Item Details */}
-              <h3 className="text-xl font-semibold text-gray-800 hover:text-purple-600 transition duration-300">{item.itemName}</h3>
-              <p className="text-gray-600 mt-2">ID: <span className="font-medium text-indigo-600">{item.itemId}</span></p>
-              <p className="text-gray-600">Quantity: <span className="font-medium text-indigo-600">{item.quantity}</span></p>
-              <p className="text-xl font-bold text-green-600 mt-2">Price: ${item.price}</p>
+                {items.length > 0 ? (
+                    items.map((item) => (
+                        <div key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+                            {/* Item Image */}
+                            <div className="mb-4">
+                                <img
+                                    src={item.Urls[0]}
+                                    alt={item.itemName}
+                                    className="w-full h-40 object-cover rounded-lg"
+                                />
+                            </div>
+                            
+                            {/* Item Details */}
+                            <h3 className="text-xl font-semibold text-gray-800 hover:text-purple-600 transition duration-300">{item.itemName}</h3>
+                            <p className="text-gray-600 mt-2">ID: <span className="font-medium text-indigo-600">{item.itemId}</span></p>
+                            <p className="text-gray-600">Quantity: <span className="font-medium text-indigo-600">{item.quantity}</span></p>
+                            <p className="text-xl font-bold text-green-600 mt-2">Price: ${item.price}</p>
 
-              {/* Optionally, you can add a button for actions like Add to Cart */}
-              <button className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-300">
-                Add to Cart
-              </button>
+                            {/* Add to Cart Button */}
+                            <button
+                                onClick={() => addToCart(item)}
+                                className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-300"
+                            >
+                                Add to Cart
+                            </button>
+                        </div>
+                    ))
+                ) : (
+                    <p className="text-center col-span-3 text-gray-500">No items found</p>
+                )}
             </div>
-          ))
-        ) : (
-          <p className="text-center col-span-3 text-gray-500">No items found</p>
-        )}
-      </div>
+
+            {/* Cart and Purchase Section */}
+            {cart.length > 0 && (
+                <div className="fixed bottom-10 right-10 bg-green-600 text-white p-4 rounded-lg shadow-lg">
+                    <p className="text-lg font-semibold">Items in Cart: {cart.length}</p>
+                    <button
+                        onClick={purchaseItems}
+                        className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none transition duration-300"
+                    >
+                        Purchase Items
+                    </button>
+                </div>
+            )}
         </>
     );
 }

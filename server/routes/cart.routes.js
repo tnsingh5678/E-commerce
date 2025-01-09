@@ -45,6 +45,10 @@ router.post('/bill',async(req,res)=>{
 router.post('/additem', async (req,res)=>{
     try {
         const { itemId , quantity , price , userId} = req.body;
+        console.log(itemId)
+        console.log(quantity)
+        console.log(price)
+        console.log(userId)
     
         if(!itemId||!quantity||!price){
             return res.status(404).json({
@@ -52,7 +56,7 @@ router.post('/additem', async (req,res)=>{
             })
         }
     
-        const item = await Item.findById(itemId);
+        const item = await Item.findOne({itemId: itemId});
         if(!item){
             return res.status(200).json({
                 message: "Item is not available"
@@ -65,7 +69,7 @@ router.post('/additem', async (req,res)=>{
             })
         }
         if(!user.cart) user.cart = [];
-        user.cart.push({itemId,quantity,price})
+        user.cart.push(item)
     
         await user.save();
     
