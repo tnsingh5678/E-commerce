@@ -7,20 +7,20 @@ export default function AddItem(){
     const [itemName , setItemName] = useState("");
     const [quantity , setQuantity] = useState(0);
     const [price , setPrice] = useState(0);
-    const [images , setImages] = useState([]);
+    const [image , setImage] = useState();
     const [message , setMessage] = useState("");
     const [itemId , setItemId] = useState();
     
     
     const FileUpload = (e)=>{
-        const file = e.target.files[0];
-        setImages(file);
+        const files = e.target.files[0];
+        setImage(files);
     }
 
     const CloudinaryUpload = async (e)=>{
         e.preventDefault();
         
-        if(!itemName||!quantity||!price||!images){
+        if(!itemName||!quantity||!price||!image){
             setMessage("All fields are required");
             toast.error("All fileds are required")
             return;
@@ -33,9 +33,7 @@ export default function AddItem(){
         form.append('quantity',quantity);
         form.append('price',price);
 
-        for(let i=0;i<images.length;i++){
-            form.append(images[i]);
-        }
+        form.append('file',image);                                                                                 
 
         try{
             const response = await axios.post('http://localhost:4000/item/additem',form,{
@@ -107,7 +105,7 @@ export default function AddItem(){
 
             <input className="p-2 m-2 bg-gray-300 border-red-400" placeholder="price"
             value={price} onChange={(e)=>setPrice(e.target.value)}></input>
-            <input type="file" multiple onChange={FileUpload} className="p-2 m-2 bg-blue-500"/>
+            <input type="file" onChange={FileUpload} className="p-2 m-2 bg-blue-500"/>
 
             <button className="btn" onClick={CloudinaryUpload}>Add Item</button>
             <button className="btn" onClick={UpdateData}>Update Item</button>
