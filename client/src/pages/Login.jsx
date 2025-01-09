@@ -26,19 +26,62 @@ export default function Login(){
             console.log("Error occured during login ", error)
         }
     }
-    return(
-    <>
-       <div className="p-10 m-5 bg-orange-400">
-        <form onSubmit={onLogin}>
-        <input value={email} className="p-2 m-2 bg-gray-400" placeholder="email" onChange={(e)=>setEmail(e.target.value)}>
-        </input>
-        <input value={password} type="password" className="p-2 m-2 bg-gray-400" placeholder="password" onChange={(e)=>setPassword(e.target.value)}>
-        </input>
-        <button className="p-2 m-2 bg-green-500" type="submit" placeholder="Login">Login
-        </button>
-        </form>
-       </div>
-     
-      
-    </>);
+    return (
+        <>
+          <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <div className="w-full max-w-sm p-8 bg-white rounded-lg shadow-lg">
+              <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">
+                Welcome Back!
+              </h2>
+    
+              <form onSubmit={onLogin} className="space-y-4">
+                <div>
+                  <label htmlFor="email" className="block text-gray-700 text-lg mb-2">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your email"
+                  />
+                </div>
+    
+                <div>
+                  <label htmlFor="password" className="block text-gray-700 text-lg mb-2">
+                    Password
+                  </label>
+                  <input
+                    id="password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    placeholder="Enter your password"
+                  />
+                </div>
+    
+                <button
+                  type="submit"
+                  className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+                >
+                  Login
+                </button>
+              </form>
+    
+              <p className="text-center text-gray-600 mt-4">
+                Don't have an account?{" "}
+                <span
+                  onClick={() => navigate("/signup")}
+                  className="text-blue-600 cursor-pointer hover:underline"
+                >
+                  Sign up
+                </span>
+              </p>
+            </div>
+          </div>
+        </>
+      );
 }

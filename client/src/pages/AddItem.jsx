@@ -93,39 +93,86 @@ export default function AddItem() {
   };
 
   return (
-    <>
-      <div>
-        <input
-          className="m-2 p-2 bg-gray-300 border-red-400"
-          placeholder="Item Name"
-          value={itemName}
-          onChange={(e) => setItemName(e.target.value)}
-        />
-        <input
-          className="p-2 m-2 bg-gray-300 border-red-400"
-          placeholder="Quantity"
-          value={quantity}
-          onChange={(e) => setQuantity(e.target.value)}
-        />
-        <input
-          className="p-2 m-2 bg-gray-300 border-red-400"
-          placeholder="Price"
-          value={price}
-          onChange={(e) => setPrice(e.target.value)}
-        />
-        <input
-          type="file"
-          onChange={FileUpload}
-          className="p-2 m-2 bg-blue-500"
-        />
+    <div className="max-w-4xl mx-auto p-8 bg-white shadow-lg rounded-lg overflow-hidden">
+      <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Add New Item</h2>
+      
+      <div className="space-y-6">
+        <div>
+          <label htmlFor="itemName" className="text-lg text-gray-700">Item Name</label>
+          <input
+            id="itemName"
+            className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            placeholder="Enter item name"
+            value={itemName}
+            onChange={(e) => setItemName(e.target.value)}
+          />
+        </div>
 
-        <button className="btn" onClick={CloudinaryUpload}>Add Item</button>
-        <button className="btn" onClick={UpdateData}>Update Item</button>
-        <button className="btn" onClick={UpdateImage}>Update Image</button>
-        <button className="btn" onClick={DeleteItem}>Delete Item</button>
+        <div>
+          <label htmlFor="quantity" className="text-lg text-gray-700">Quantity</label>
+          <input
+            id="quantity"
+            className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            type="number"
+            placeholder="Enter quantity"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+        </div>
 
-        <p>{message}</p>
+        <div>
+          <label htmlFor="price" className="text-lg text-gray-700">Price</label>
+          <input
+            id="price"
+            className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            type="number"
+            placeholder="Enter price"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+        </div>
+
+        <div>
+          <label htmlFor="image" className="text-lg text-gray-700">Item Image</label>
+          <input
+            id="image"
+            type="file"
+            onChange={FileUpload}
+            className="w-full p-4 bg-gray-100 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+          />
+        </div>
       </div>
-    </>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+        <button
+          className="w-full py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300 transform hover:scale-105"
+          onClick={CloudinaryUpload}
+        >
+          Add Item
+        </button>
+        <button
+          className="w-full py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-md hover:bg-yellow-600 transition duration-300 transform hover:scale-105"
+          onClick={UpdateData}
+        >
+          Update Item
+        </button>
+        <button
+          className="w-full py-3 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition duration-300 transform hover:scale-105"
+          onClick={UpdateImage}
+        >
+          Update Image
+        </button>
+        <button
+          className="w-full py-3 bg-red-500 text-white font-semibold rounded-lg shadow-md hover:bg-red-600 transition duration-300 transform hover:scale-105"
+          onClick={DeleteItem}
+        >
+          Delete Item
+        </button>
+      </div>
+
+      {message && (
+        <p className="mt-6 text-center text-lg text-gray-600">{message}</p>
+      )}
+    </div>
   );
 }

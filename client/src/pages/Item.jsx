@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Item() {
     const [items, setItems] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [price, setPrice] = useState(0);
+    const [price, setPrice] = useState(100);
     const [open, setOpen] = useState(false);
     const [option, setOption] = useState('');
     const [categoryOpen, setCategoryOpen] = useState(false);
@@ -13,35 +13,53 @@ export default function Item() {
 
     const getItem = async () => {
         const response = await axios.get('http://localhost:4000/product/');
-        setItems(response.data);  
+        setItems(response.data.items);
     };
+    useEffect(()=>{
+        getItem();
+    },[])
 
     const getByCategory = async (category) => {
         const response = await axios.get('http://localhost:4000/product/filter/category', {
             params: { category }
         });
-        setItems(response.data);
+        setItems(response.data.items);
     };
 
     const getByPrice = async (price) => {
         const response = await axios.get('http://localhost:4000/product/filter/price', {
             params: { price }
         });
-        setItems(response.data);
+        console.log(response)
+        setItems(response.data.items);
+    };
+
+    const handlePriceChange = (e) => {
+        const value = e.target.value;
+        setPrice(value);
+    };
+
+    const handlePriceSearch = () => {
+        if (price && !isNaN(price)) {
+            getByPrice(price);
+        } else {
+            // Handle empty or invalid price input
+            alert('Please enter a valid price');
+        }
     };
 
     const getBySortInc = async () => {
         const response = await axios.get('http://localhost:4000/product/filter/sort', {
             params: { type: "INC" }
         });
-        setItems(response.data);
+        setItems(response.data.items);
     };
 
     const getBySortDec = async () => {
         const response = await axios.get('http://localhost:4000/product/filter/sort', {
             params: { type: "DEC" }
         });
-        setItems(response.data);
+        setItems(response.data.items);
     };
 
     const toggleDropDown = () => {
@@ -65,50 +83,90 @@ export default function Item() {
         getByPrice(price);  
         setOpen(false);
     };
-
     return (
         <>
-            <div className="dropdown">
-                <button onClick={toggleDropDown} className="m-2 p-2 bg-slate-400">
+            {/* Sort Dropdown */}
+            <div className="relative m-4">
+                <button
+                    onClick={toggleDropDown}
+                    className="py-2 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg shadow-md hover:bg-purple-700 focus:outline-none transition duration-300 ease-in-out"
+                >
                     {option || 'Sort By'}
                 </button>
+
                 {open && (
-                    <ul className="m-2 p-2 border-r-4 bg-blue-500">
-                        <li className="bg-yellow-600" onClick={getItem}>All</li>
-                        <li className="bg-yellow-300" onClick={toggleCategoryDropDown}>
-                            <div>
-                                Categories
-                                {categoryOpen && (
-                                    <ul>
-                                        {category.map((cat, index) => (
-                                            <li key={index} className="bg-yellow-300" onClick={() => setOptionCategory(cat)}>
-                                                {cat}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                )}
-                            </div>
+                    <ul className="absolute left-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg z-10 divide-y divide-gray-200">
+                        <li className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer" onClick={getItem}>All</li>
+                        <li className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer" onClick={toggleCategoryDropDown}>
+                            Categories
+                            {categoryOpen && (
+                                <ul className="mt-2 ml-4">
+                                    {category.map((cat, index) => (
+                                        <li
+                                            key={index}
+                                            className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer"
+                                            onClick={() => setOptionCategory(cat)}
+                                        >
+                                            {cat}
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                         </li>
-                        <li className="bg-yellow-300" onClick={() => setOptionPrice(10)}>Price: 10</li>
-                        <li className="bg-yellow-300" onClick={getBySortDec}>High to Low</li>
-                        <li className="bg-yellow-300" onClick={getBySortInc}>Low to High</li>
                     </ul>
                 )}
             </div>
-            
-            <div>
-                {items.length > 0 ? (
-                    items.map((item, index) => (
-                        <div key={index} className="p-2">
-                            <h3>{item.name}</h3>
-                            <p>Category: {item.category}</p>
-                            <p>Price: ${item.price}</p>
-                        </div>
-                    ))
-                ) : (
-                    <p>No items found</p>
-                )}
+
+            {/* Price Input Field */}
+            <div className="m-4">
+                <label className="block text-gray-700 text-lg font-semibold mb-2">
+                    Enter Price:
+                </label>
+                <input
+                    type="number"
+                    placeholder="Enter price"
+                    value={price}
+                    onChange={handlePriceChange}
+                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                <button
+                    onClick={handlePriceSearch}
+                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-300"
+                >
+                    Search
+                </button>
             </div>
+
+            {/* Items Grid */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {items.length > 0 ? (
+          items.map((item) => (
+            <div key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
+              {/* Item Image */}
+              <div className="mb-4">
+                <img
+                  src={item.Urls[0]} // Assuming the first URL in the array is the image to display
+                  alt={item.itemName}
+                  className="w-full h-40 object-cover rounded-lg"
+                />
+              </div>
+              
+              {/* Item Details */}
+              <h3 className="text-xl font-semibold text-gray-800 hover:text-purple-600 transition duration-300">{item.itemName}</h3>
+              <p className="text-gray-600 mt-2">ID: <span className="font-medium text-indigo-600">{item.itemId}</span></p>
+              <p className="text-gray-600">Quantity: <span className="font-medium text-indigo-600">{item.quantity}</span></p>
+              <p className="text-xl font-bold text-green-600 mt-2">Price: ${item.price}</p>
+
+              {/* Optionally, you can add a button for actions like Add to Cart */}
+              <button className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-300">
+                Add to Cart
+              </button>
+            </div>
+          ))
+        ) : (
+          <p className="text-center col-span-3 text-gray-500">No items found</p>
+        )}
+      </div>
         </>
     );
 }

@@ -26,7 +26,7 @@ router.get('/', async (req,res)=>{
 })
 
 router.get('/filter/category', async (req,res)=>{
-    const categories = req.query;
+    const categories = req.query.categories;
 
     if (!categories || !Array.isArray(categories)) {
         return res.status(401).json({
@@ -56,21 +56,27 @@ router.get('/filter/category', async (req,res)=>{
 })
 
 router.get('/filter/price', async ( req,res)=>{
-    const price = req.query;
+    const price = Number(req.query.price);
+    console.log(price);
+    
 
     try {
-        if(!price){
+        if(price===0){
             return res.status(401).json({
                 message: "Price not found for price filtering"
             })
         }
+        console.log(price);
         const items = await Item.find({ price: { $lte: price } });
+        console.log(price);
 
         if (items.length === 0) {
             return res.status(400).json({
                 message: "No items found for the selected price range"
             });
         }
+        console.log(price);
+        console.log(items)
 
         return res.status(200).json({
             message: "Item filtered by amount successfully",
@@ -88,7 +94,8 @@ router.get('/filter/price', async ( req,res)=>{
 })
 
 router.get('/filter/sort', async (req,res)=>{
-    const type = req.query;
+    const type = req.query.type;
+    console.log(type)
     try {
         const items = await Item.find();
         if(items.length === 0){
@@ -96,12 +103,13 @@ router.get('/filter/sort', async (req,res)=>{
                 message: "Item not found for sorting"
             })
         }
-        sort(items);
+        
         if(type==="DEC"){
             items.sort((a, b) => b.price - a.price);
         }else{
             items.sort((a, b) => a.price - b.price);
         }
+        
         return res.status(200).json({
             message: "Item sorted successfully",
             items
