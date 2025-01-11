@@ -8,7 +8,7 @@ import AddItem from './pages/AddItem'
 import AuthProvider from './context/AuthContext'
 import { ToastContainer } from 'react-toastify'
 import { UserProvider } from './context/UserContext'
-import Cart from './pages/Cart'
+import Payment from './pages/Payment'
 import User from './pages/User'
 
 import './App.css'
@@ -26,7 +26,7 @@ function App() {
     <Route path="/" element={<Home/>}/>
     <Route path='/item' element={<Item/>}/>
     <Route path='/additem' element={<AddItem/>}/>
-    <Route path="/Cart" element={<Cart/>}></Route>
+    <Route path="/Payment" element={<Payment/>}></Route>
     <Route path="/User" element={<User/>}></Route>
     </Routes>
     </UserProvider>
