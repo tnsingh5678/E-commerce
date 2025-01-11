@@ -31,7 +31,8 @@ router.post('/bill',async(req,res)=>{
         }
         
         return res.status(200).json({
-            message: "Bill successfully generated"
+            message: "Bill successfully generated",
+            bill
         })
 
     }catch(error){

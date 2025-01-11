@@ -1,11 +1,6 @@
 import mongoose,{Schema} from "mongoose"
 
 const billSchema = new mongoose.Schema({
-    "billId":{
-        type: String,
-        required: true,
-        unique: true
-    },
     "userId":{
         type: Schema.Types.ObjectId,
         ref: 'User',
@@ -15,11 +10,11 @@ const billSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    "item":{
+    "item":[{
         type: [Schema.Types.ObjectId],
         ref: 'ITEM',
         required: true
-    }
+    }]
 
 },{timestamps: true})
 
