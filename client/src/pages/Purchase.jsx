@@ -10,6 +10,8 @@ export default function Purchase(){
 
     const { user } = useContext(UserContext);
     const userId = user.userId;
+    const {amount} = location.state || {};
+    
 
     const PurchaseHandler = async (e)=>{
         e.preventDefault();
@@ -26,12 +28,14 @@ export default function Purchase(){
         }
 
     }
+    
 
     return (
         <>
         <p>{user.userId}</p>
         <p>{user.email}</p>
-        <Payment/>
+        <p>{user.name}</p>
+        <Payment amount={amount} email={user.email} customerName={user.name} phone={user.phone}/>
 
         <button onClick={PurchaseHandler} className="bg-gray-500 border border-r-8">
             Order

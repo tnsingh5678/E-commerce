@@ -12,6 +12,7 @@ import Payment from './pages/Payment'
 import User from './pages/User'
 
 import './App.css'
+import Purchase from './pages/Purchase'
 
 function App() {
   return(
@@ -28,6 +29,7 @@ function App() {
     <Route path='/additem' element={<AddItem/>}/>
     <Route path="/Payment" element={<Payment/>}></Route>
     <Route path="/User" element={<User/>}></Route>
+    <Route path='/purchase' element={<Purchase/>}></Route>
     </Routes>
     </UserProvider>
     </AuthProvider>

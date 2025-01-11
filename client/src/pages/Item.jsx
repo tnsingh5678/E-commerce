@@ -1,5 +1,6 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Item() {
@@ -11,7 +12,7 @@ export default function Item() {
     const [categoryOpen, setCategoryOpen] = useState(false);
     const [cart, setCart] = useState([]); // Initialize cart as an empty array
     const { user } = useContext(UserContext);
-    
+    const navigate = useNavigate();
     
     
 
@@ -95,6 +96,7 @@ export default function Item() {
         }
 
         try {
+            let total = 0;
             for (const item of cart) {
                 console.log(item.itemId)
                 console.log(item.price)
@@ -107,9 +109,15 @@ export default function Item() {
                     price: item.price,
                     
                 });
+                total += item.price * item.quantity;
+
             }
+
+            
+            navigate('/purchase', {state:{total}})
+            
             alert('Purchase Successful!');
-            setCart([]); // Clear the cart after successful purchase
+            setCart([]); 
         } catch (error) {
             alert('Error purchasing items');
             console.error(error);

@@ -16,7 +16,14 @@ const userSchema = new mongoose.Schema({
         required : true,
         
     },
+    "phone":{
+        type: String,
+        unique: true,
+        required: true
+
+    },
     "cart":[{
+        
         type:Schema.Types.ObjectId,
         ref: 'ECOMITEM',
         required: false

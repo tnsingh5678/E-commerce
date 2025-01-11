@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast } from "react-toastify"
 
-const Payment = ({ customerName , email , phone , amount}) => {
-  const [amount, setAmount] = useState(1000); 
+const Payment = (props) => {
+  
   const [loading, setLoading] = useState(false);
 
   const handlePayment = async () => {
     setLoading(true);
+    const amount = props.amount;
 
     try {
       
@@ -15,22 +16,22 @@ const Payment = ({ customerName , email , phone , amount}) => {
         amount,
       });
 
-      const { id, currency } = response.data;
+      const { id } = response.data;
 
       
       const options = {
         key: process.env.RAZORPAY_SECRET_KEY, 
-        amount: amount,
-        currency: currency,
+        amount: props.amount,
+        currency: 'INR',
         order_id: id,
         handler: function (response) {
           toast.success("Payment successful")
           console.log(response);
         },
         prefill: {
-          name: customerName,
-          email: email,
-          contact: phone,
+          name: props.customerName,
+          email: props.email,
+          contact: props.phone,
         },
         theme: {
           color: '#3399cc',

@@ -77,7 +77,9 @@ router.post('/login', async (req, res) => {
                 message: "Invalid email or password"
             });
         }
-        const payload = {email: user.email ,userId: user._id}
+
+
+        const payload = {email: user.email ,userId: user._id, name: user.name ,phone : user.phone}
         const key = process.env.JWT_SECRET_KEY;
 
         const token = JWT.sign(payload,key,{expiresIn: '1h'})
