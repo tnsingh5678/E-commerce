@@ -42,7 +42,7 @@ const Payment = (props) => {
       razorpay.open();
     } catch (error) {
       console.error('Error creating payment', error);
-      toast.error("Payemnt failed")
+      toast.error("Payment failed")
     }
 
     setLoading(false);
