@@ -1,9 +1,9 @@
 import nodemailer from "nodemailer"
-import express from "express"
+import express, { text } from "express"
 
 const router = express.Router();
 
-const transporter = nodemailer.createTransport({
+export const transporter = nodemailer.createTransport({
     service: 'gmail',
     host: 'smtp.gmail.com',
     secure: true,
@@ -30,6 +30,24 @@ router.get('/',(req,res)=>{
             console.log("There is some error ",err);
         }else{
             console.log('Email sent :',info.response)
+        }
+    })
+
+})
+
+router.get('/updatepassword',(req,res)=>{
+    const mailOptions = {
+        from: process.env.EMAIL,
+        to: process.env.TO_EMAIL,
+        subject: "Password change",
+        text: ""  // some magic link to refer the page
+    }
+
+    transporter.sendMail(mailOptions,(err,info)=>{
+        if(err){
+            console.log("Error while new pasword link generation")
+        }else{
+            console.log("Link generation successful", info.response)
         }
     })
 })

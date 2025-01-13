@@ -2,6 +2,7 @@ import express from "express";
 import User from "../models/user.models.js";
 import bcrypt from "bcryptjs";
 
+
 const router = express.Router();
 
 const hashed = async (password) => {
@@ -89,5 +90,60 @@ router.post('/login', async (req, res) => {
         });
     }
 });
+
+
+router.post('/update', async (req,res)=>{
+    const { userId , fields } = req.body;
+    try {
+        const user = await User.findById(userId,fields);
+        if(!user){
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+        await user.save();
+
+        return res.status(200).json({
+            message: "Data updated successfully"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error while updating user details",
+            error: error.message
+        })
+    }
+})
+
+router.post('/updatepassword', async (req,res)=>{
+    const { userId , newPassword} = req.body;
+    try {
+        if(!newPassword){
+            return res.status(400).json({
+                message: "New Password field is empty"
+            })
+        }
+        const user = await User.findById(userId);
+        if(!user){
+            return res.status(404).json({
+                message: "User not found"
+            })
+        }
+        const hash = await bcrypt.hash(newPassword,10);
+        user.password = hash;
+        await user.save();
+
+        res.status(200).json({
+            message: "Password updated successfully"
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error while updating password"
+        })
+        
+    }
+
+})
 
 export default router;
