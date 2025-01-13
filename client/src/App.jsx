@@ -10,6 +10,7 @@ import { ToastContainer } from 'react-toastify'
 import { UserProvider } from './context/UserContext'
 import Payment from './pages/Payment'
 import User from './pages/User'
+import ProtectedRoute from './components/Protected'
 
 import './App.css'
 import Purchase from './pages/Purchase'
@@ -29,8 +30,13 @@ function App() {
     <Route path='/additem' element={<AddItem/>}/>
     <Route path="/Payment" element={<Payment/>}></Route>
     <Route path="/User" element={<User/>}></Route>
-    <Route path='/purchase' element={<Purchase/>}></Route>
+    {/* <Route path='/purchase' element={<Purchase/>}></Route> */}
+    <Route
+          path="/purchase"
+          element={<ProtectedRoute element={Purchase} />}
+        />    
     </Routes>
+    
     </UserProvider>
     </AuthProvider>
   </Router>
