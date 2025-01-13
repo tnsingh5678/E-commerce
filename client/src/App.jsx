@@ -1,4 +1,3 @@
-
 import { BrowserRouter as Router , Route , Routes} from 'react-router-dom'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -25,11 +24,26 @@ function App() {
     <Routes>
     <Route path="/Login" element={<Login/>}/>
     <Route path="/SignUp" element={<Signup/>}/>
-    <Route path="/" element={<Home/>}/>
-    <Route path='/item' element={<Item/>}/>
-    <Route path='/additem' element={<AddItem/>}/>
-    <Route path="/Payment" element={<Payment/>}></Route>
-    <Route path="/User" element={<User/>}></Route>
+    <Route
+          path="/"
+          element={<ProtectedRoute element={Home} />}
+        />
+        <Route
+          path="/item"
+          element={<ProtectedRoute element={Item} />}
+        />
+        <Route
+          path="/additem"
+          element={<ProtectedRoute element={AddItem} />}
+        />
+        <Route
+          path="/Payment"
+          element={<ProtectedRoute element={Payment} />}
+        />
+        <Route
+          path="/User"
+          element={<ProtectedRoute element={User} />}
+        />
     {/* <Route path='/purchase' element={<Purchase/>}></Route> */}
     <Route
           path="/purchase"
