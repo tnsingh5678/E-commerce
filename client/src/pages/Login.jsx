@@ -21,6 +21,7 @@ export default function Login(){
             axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
             toast.success("Login successful")
             navigate('/')
+            
         } catch (error) {
             toast.error("Login failed. Try again later")
             console.log("Error occured during login ", error)

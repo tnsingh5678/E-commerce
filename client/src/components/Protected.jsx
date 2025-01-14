@@ -2,16 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ element: Component, ...rest }) {
-  const token = localStorage.getItem('token');
+  
   const [auth, setAuth] = useState(false);
+  console.log(token);
+  console.log(rest);
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
+    console.log("Token retrieved from localStorage: ", token);
+  
     if (token) {
       setAuth(true);
     } else {
-      setAuth(false);
+      console.log("No token found, redirecting to login.");
     }
-  }, [token]);
+  }, []); 
 
  
   return auth ? <Component {...rest} /> : <Navigate to="/Login" replace />;

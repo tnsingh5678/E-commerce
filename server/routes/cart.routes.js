@@ -5,10 +5,10 @@ import Bill from "../models/bill.models.js";
 import Razorpay from "razorpay"
 const router = express.Router();
 
-const razorpay = new Razorpay({
-    key_id: process.env.RAZORPAY_KEY,
-    key_secret: process.env.RAZORPAY_SECRET_KEY
-})
+// const razorpay = new Razorpay({
+//     key_id: process.env.RAZORPAY_KEY,
+//     key_secret: process.env.RAZORPAY_SECRET_KEY
+// })
 
 router.post('/bill',async(req,res)=>{
     try{
@@ -48,30 +48,30 @@ router.post('/bill',async(req,res)=>{
     
 })
 
-router.post('/payment',async (req,res)=>{
-    const amount = req.body;
-    try {
-        const options = {
-            amount,
-            currency: 'INR',
-            receipt: `receipt#${Math.floor(Math.random() * 1000000)}`,
-            payment_capture: 1
-        }
+// router.post('/payment',async (req,res)=>{
+//     const amount = req.body;
+//     try {
+//         const options = {
+//             amount,
+//             currency: 'INR',
+//             receipt: `receipt#${Math.floor(Math.random() * 1000000)}`,
+//             payment_capture: 1
+//         }
 
-        const order = await razorpay.orders.create(options);
+//         const order = await razorpay.orders.create(options);
 
-        res.status(200).json({
-            id: order.id,
-            amount: order.amount,
-            currency: order.currency,
-        });
-    } catch (error) {
-        return res.status(500).json({
-            message:"Error during payment with stripe",
-            error: error.message
-        })
-    }
-})
+//         res.status(200).json({
+//             id: order.id,
+//             amount: order.amount,
+//             currency: order.currency,
+//         });
+//     } catch (error) {
+//         return res.status(500).json({
+//             message:"Error during payment with stripe",
+//             error: error.message
+//         })
+//     }
+// })
 
 router.post('/additem', async (req,res)=>{
     try {
