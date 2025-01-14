@@ -2,6 +2,8 @@ import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify"
+import ProductCard from "../components/ProductCard";
 
 export default function Item() {
     const [items, setItems] = useState([]);
@@ -50,7 +52,7 @@ export default function Item() {
         if (price && !isNaN(price)) {
             getByPrice(price);
         } else {
-            alert('Please enter a valid price');
+            toast.error('Please enter a valid price');
         }
     };
 
@@ -80,18 +82,18 @@ export default function Item() {
         // Check if the item already exists in the cart
         const existingItem = cart.find(cartItem => cartItem._id === item._id);
         if (existingItem) {
-            alert('Item already in cart');
+            toast.error('Item already in cart');
             return;
         }
 
         const newCart = [...cart, item];
         setCart(newCart);
-        alert(`${item.itemName} added to cart`);
+        toast.error(`${item.itemName} added to cart`);
     };
 
     const purchaseItems = async () => {
         if (cart.length === 0) {
-            alert('Your cart is empty!');
+            toast.error('Your cart is empty!');
             return;
         }
 
@@ -116,114 +118,38 @@ export default function Item() {
             
             navigate('/purchase', {state:{total}})
             
-            alert('Purchase Successful!');
+            toast.success('Purchase Successful!');
             setCart([]); 
         } catch (error) {
-            alert('Error purchasing items');
+            toast.error('Error purchasing items');
             console.error(error);
         }
     };
 
+    // sort by dropdown
+    // categories
+    // price
+    // item select + quantity select price showing
+
+
     return (
         <>
-            {/* Sort Dropdown */}
-            <div className="relative m-4">
-                <button
-                    onClick={toggleDropDown}
-                    className="py-2 px-6 bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-lg shadow-md hover:bg-purple-700 focus:outline-none transition duration-300 ease-in-out"
-                >
-                    {option || 'Sort By'}
-                </button>
-
-                {open && (
-                    <ul className="absolute left-0 mt-2 w-56 bg-white border border-gray-300 rounded-lg shadow-lg z-10 divide-y divide-gray-200">
-                        <li className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer" onClick={getItem}>All</li>
-                        <li className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer" onClick={toggleCategoryDropDown}>
-                            Categories
-                            {categoryOpen && (
-                                <ul className="mt-2 ml-4">
-                                    {category.map((cat, index) => (
-                                        <li
-                                            key={index}
-                                            className="px-4 py-2 text-gray-700 hover:bg-yellow-200 cursor-pointer"
-                                            onClick={() => setOptionCategory(cat)}
-                                        >
-                                            {cat}
-                                        </li>
-                                    ))}
-                                </ul>
-                            )}
-                        </li>
-                    </ul>
-                )}
+            <div className="dropdown bg-gray-500 border border-r-8" onClick={toggleDropDown}>
+                Sort By
             </div>
+            {open&&
+            <div className="bg-slate-400 w-400px h-400px">
+                {categories.map((category,index)=>{
+                    <li className="bg-blue-500 border border-r-8 m-2 p-2" key={index}>{category}</li>
+                })}
 
-            {/* Price Input Field */}
-            <div className="m-4">
-                <label className="block text-gray-700 text-lg font-semibold mb-2">
-                    Enter Price:
-                </label>
-                <input
-                    type="number"
-                    placeholder="Enter price"
-                    value={price}
-                    onChange={handlePriceChange}
-                    className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button
-                    onClick={handlePriceSearch}
-                    className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 focus:outline-none transition duration-300"
-                >
-                    Search
-                </button>
             </div>
-
-            {/* Items Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {items.length > 0 ? (
-                    items.map((item) => (
-                        <div key={item._id} className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition duration-300 transform hover:scale-105">
-                            {/* Item Image */}
-                            <div className="mb-4">
-                                <img
-                                    src={item.Urls[0]}
-                                    alt={item.itemName}
-                                    className="w-full h-40 object-cover rounded-lg"
-                                />
-                            </div>
-                            
-                            {/* Item Details */}
-                            <h3 className="text-xl font-semibold text-gray-800 hover:text-purple-600 transition duration-300">{item.itemName}</h3>
-                            <p className="text-gray-600 mt-2">ID: <span className="font-medium text-indigo-600">{item.itemId}</span></p>
-                            <p className="text-gray-600">Quantity: <span className="font-medium text-indigo-600">{item.quantity}</span></p>
-                            <p className="text-xl font-bold text-green-600 mt-2">Price: ${item.price}</p>
-
-                            {/* Add to Cart Button */}
-                            <button
-                                onClick={() => addToCart(item)}
-                                className="mt-4 px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-lg hover:bg-indigo-700 focus:outline-none transition duration-300"
-                            >
-                                Add to Cart
-                            </button>
-                        </div>
-                    ))
-                ) : (
-                    <p className="text-center col-span-3 text-gray-500">No items found</p>
-                )}
-            </div>
-
-            {/* Cart and Purchase Section */}
-            {cart.length > 0 && (
-                <div className="fixed bottom-10 right-10 bg-green-600 text-white p-4 rounded-lg shadow-lg">
-                    <p className="text-lg font-semibold">Items in Cart: {cart.length}</p>
-                    <button
-                        onClick={purchaseItems}
-                        className="mt-2 px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 focus:outline-none transition duration-300"
-                    >
-                        Purchase Items
-                    </button>
-                </div>
-            )}
+            }
+            {
+                items.map((item,index)=>{
+                    <ProductCard itemName={item.itemName} quantity={item.quantity} price={item.price} Urls={item.Urls}  />
+                })
+            }
         </>
     );
 }
