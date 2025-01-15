@@ -7,17 +7,17 @@ import ProductCard from "../components/ProductCard";
 
 export default function Item() {
   const [items, setItems] = useState([]);
-  const [categories, setCategories] = useState([]); // Available categories
+  const [categories, setCategories] = useState([]); 
   const [price, setPrice] = useState(100);
   const [open, setOpen] = useState(false);
   const [option, setOption] = useState('');
   const [categoryOpen, setCategoryOpen] = useState(false);
-  const [cart, setCart] = useState([]); // Initialize cart as an empty array
+  const [cart, setCart] = useState([]); 
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
 
-  // Default categories
-  const category = ["Accessories", "Electronics", "Cosmetics", "Grocery"];
+  
+  const category = ["INC","DEC"];
 
   const getItem = async () => {
     const response = await axios.get('http://localhost:4000/product/');
@@ -26,7 +26,7 @@ export default function Item() {
 
   useEffect(() => {
     getItem();
-    setCategories(category); // Initialize categories
+    setCategories(category);
   }, []);
 
   const getByCategory = async (category) => {
@@ -66,7 +66,7 @@ export default function Item() {
 
   const setOptionCategory = (category) => {
     setOption(category);
-    setCategories([category]); // Setting selected category
+    setCategories([category]); 
     setCategoryOpen(false);
     getByCategory(category);
   };
@@ -79,7 +79,7 @@ export default function Item() {
   };
 
   const addToCart = (item) => {
-    // Check if the item already exists in the cart
+    
     const existingItem = cart.find(cartItem => cartItem._id === item._id);
     if (existingItem) {
       toast.error('Item already in cart');
@@ -118,7 +118,7 @@ export default function Item() {
     }
   };
 
-  // Rendering categories and items correctly now
+ 
   return (
     <>
       <div className="dropdown bg-gray-500 border border-r-8" onClick={toggleDropDown}>
