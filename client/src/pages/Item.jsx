@@ -183,8 +183,11 @@ export default function Item() {
             quantity={item.quantity}
             price={item.price}
             Urls={item.Urls}
+            item={item}
             addToCart={addToCart} 
           />
+          
+          
         ))
       ) : (
         <p>No items available</p>

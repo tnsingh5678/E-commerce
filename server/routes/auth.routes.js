@@ -84,10 +84,10 @@ router.post('/login', async (req, res) => {
 
         const token = JWT.sign(payload,key,{expiresIn: '1h'})
         console.log(token)
-
+        console.log(user)
         return res.status(200).json({
             message: "User successfully logged in",
-            token: token
+            token: token,
         });
     } catch (error) {
         console.error(error);
@@ -96,6 +96,30 @@ router.post('/login', async (req, res) => {
         });
     }
 });
+
+router.get('/user', async (req,res)=>{
+    const userId = req.params;
+    try {
+        if(!userId){
+            return res.status(401).json({
+                message: "User id is invalid"
+            })
+        }
+        const user = await User.findById(userId);
+        if( !user ){
+            return  res.status(401).json({
+                message: "User not found"
+            })
+        }
+
+        res.status(200).json({
+            message: "User cart details fetched successfully",
+            cart: user.cart
+        })
+    } catch (error) {
+        
+    }
+})
 
 
 

@@ -1,6 +1,6 @@
 
 
-export default function ProductCard({ quantity, itemName, Urls, price }) {
+export default function ProductCard({ quantity, itemName, Urls, price , addToCart, item}) {
     return (
       <div className="bg-white shadow-lg rounded-lg overflow-hidden w-72 h-auto mx-auto my-4 border border-gray-300 transition transform hover:scale-105 hover:shadow-xl">
         <img
@@ -14,7 +14,7 @@ export default function ProductCard({ quantity, itemName, Urls, price }) {
             <p className="text-gray-600 text-sm">Quantity: {quantity}</p>
             <p className="text-green-500 text-lg font-bold">${price}</p>
           </div>
-          <button className="w-full mt-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300">
+          <button className="w-full mt-4 py-2 bg-blue-600 text-white font-semibold rounded-md hover:bg-blue-700 transition duration-300" onClick={()=>addToCart(item)}>
             Add to Cart
           </button>
         </div>

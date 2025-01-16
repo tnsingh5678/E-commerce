@@ -10,6 +10,7 @@ import { UserProvider } from './context/UserContext'
 import Payment from './pages/Payment'
 import User from './pages/User'
 import ProtectedRoute from './components/Protected'
+import Cart from './components/Cart'
 
 import './App.css'
 import Purchase from './pages/Purchase'
@@ -29,6 +30,7 @@ function App() {
     <Route path="/additem" element={<AddItem/>}/>
     <Route path="/payment" element={<Payment/>}/>
     <Route path="/purchase" element={<Purchase/>}/>
+    <Route path="/Cart" element={<Cart/>}></Route>
     <Route
           path="/"
           element={<ProtectedRoute element={Home} />}
