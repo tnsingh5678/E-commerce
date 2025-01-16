@@ -1,5 +1,6 @@
 import express from "express";
 import User from "../models/user.models.js";
+import Item from "../models/item.models.js";
 import bcrypt from "bcryptjs";
 import JWT from "jsonwebtoken"
 
@@ -97,8 +98,8 @@ router.post('/login', async (req, res) => {
     }
 });
 
-router.get('/user', async (req,res)=>{
-    const userId = req.params;
+router.get('/user/:userId', async (req,res)=>{
+    const {userId} = req.params;
     try {
         if(!userId){
             return res.status(401).json({
@@ -112,12 +113,30 @@ router.get('/user', async (req,res)=>{
             })
         }
 
+        
+        const cart = user.cart;
+        const items = await Promise.all(
+            cart.map(async (itemId) => {
+                try {
+                    const item = await Item.findById(itemId);
+                    return item; // Return the item to the final array
+                } catch (error) {
+                    console.log(error);
+                    return null; // Return null if there is an error fetching an item
+                }
+            })
+        );
+
+        const validItems = items.filter(item => item !== null);
+
         res.status(200).json({
             message: "User cart details fetched successfully",
-            cart: user.cart
+            cart: validItems
         })
     } catch (error) {
-        
+        res.status(500).json({
+            message: "Error while getting cart"
+        })
     }
 })
 

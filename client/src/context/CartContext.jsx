@@ -1,46 +1,53 @@
-import { createContext , useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import axios from 'axios'; 
 import { UserContext } from "./UserContext";
+import { toast } from 'react-toastify'; 
 
 const CartContext = createContext();
 
-const CartProvider = async ({children})=>{
-    const [ cart , setCart ] = useState([]);
+const CartProvider = ({ children }) => {
+  const [cart, setCart] = useState([]);
+  const { user } = useContext(UserContext);
 
-    const { user } = useContext(UserContext);
-    const userId = user.userId;
-    const getDetails = async ()=>{
-        if( !userId){
-            toast.error("User not found");
-            return;
-        }
-        try {
-            const response = await axios.get('http://localhost:4000/auth/user',{
-                params: userId
-            });
-            return response.data
-        } catch (error) {
-            toast.error("Cart not found")
-        }
+  
+  const userId = user ? user.userId : null;
+
+  const getDetails = async () => {
+    if (!userId) {
+      toast.error("User not found");
+      return null; 
     }
-    useEffect(()=>{
-        const fetchDetails = async ()=>{
-            const details = await getDetails();
-            if(details){
-                console.log(details);
-                setCart(details);
-            }else{
-                console.log("Cart not found !!!")
-            }
+
+    try {
+      const response = await axios.get(`http://localhost:4000/auth/user/${userId}`);
+      return response.data;
+    } catch (error) {
+      toast.error("Error fetching cart");
+      return null; 
+    }
+  };
+
+  useEffect(() => {
+    const fetchDetails = async () => {
+      if (userId) { 
+        const details = await getDetails();
+        if (details) {
+          console.log(details);
+          setCart(details.cart || []); 
+        } else {
+          console.log("Cart not found");
         }
-        fetchDetails();
-        
-    },[userId])
-    
-    
+      }
+    };
 
-    return(
-        <CartContext.Provider value={{cart,setCart}} >{children}</CartContext.Provider>
-    )
-}
+    fetchDetails();
+  }, [userId]);
 
-export { CartContext ,CartProvider};
+  return (
+    <CartContext.Provider value={{ cart, setCart }}>
+      {children}
+    </CartContext.Provider>
+  );
+};
+
+export { CartProvider, CartContext };

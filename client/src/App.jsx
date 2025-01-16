@@ -10,7 +10,7 @@ import { UserProvider } from './context/UserContext'
 import Payment from './pages/Payment'
 import User from './pages/User'
 import ProtectedRoute from './components/Protected'
-import Cart from './components/Cart'
+import Cart from './pages/Cart'
 
 import './App.css'
 import Purchase from './pages/Purchase'
