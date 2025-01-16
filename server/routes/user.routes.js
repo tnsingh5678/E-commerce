@@ -146,4 +146,49 @@ router.post('/updatepassword', async (req,res)=>{
 
 })
 
+router.get('/orders',async (req,res)=>{
+    const userId = req.body ;
+    try {
+        const user = await User.findById(userId);
+        if( !user ){
+            return res.status(401).json({
+                message: "User not found"
+            })
+        }
+
+        const orders = user.orders;
+        res.status(200).json({
+            message: "All orders fetched successfully",
+            orders
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error while fetching the orders"
+        })
+        
+    }
+})
+
+router.get('/delivery', async (req,res)=>{
+    const userId = req.body;
+    try {
+        const user = await User.findById(userId);
+        if( !user ){
+            return res.status(401).json({
+                message: "User not found"
+            })
+        }
+
+        // delivery api
+
+        res.status(200).json({
+            message: "Order shipped successfully"
+        })
+    } catch (error) {
+        res.status(500).json({
+            message: "Error while shipping order"
+        })
+    }
+})
+
 export default router;

@@ -17,7 +17,8 @@ export default function Item() {
   const navigate = useNavigate();
 
   
-  const category = ["INC","DEC"];
+  const category = ["Medicine","Accessories"];
+  const sortOptions = ["INC","DEC"];
 
   const getItem = async () => {
     const response = await axios.get('http://localhost:4000/product/');
@@ -118,6 +119,16 @@ export default function Item() {
     }
   };
 
+  const sortItems = async (x)=>{
+    try {
+      const items = await axios.get('http://localhost:4000/product/filter/sort');
+      setItems(items);
+      axios.success(`Items sorted ${x} sucessfully`)
+    } catch (error) {
+      
+    }
+  }
+
  
   return (
     <>
@@ -135,8 +146,35 @@ export default function Item() {
               {category}
             </li>
           ))}
+          {
+          sortOptions.map((option,index)=>{
+            <li
+            key={index}
+            className="bg-blue-500 border border-r-8 m-2 p-2"
+            onClick={() => sortItems(option)}
+          >
+            {category}
+          </li>
+            
+          })
+        }
         </div>
       )}
+      <div className="bg-slate-400 w-400px h-400px">
+        {
+          sortOptions.map((option,index)=>{
+            <li
+            key={index}
+            className="bg-blue-500 border border-r-8 m-2 p-2"
+            onClick={() => sortItems(option)}
+          >
+            {category}
+          </li>
+            
+          })
+        }
+      </div>
+      <div className="grid grid-cols-4">
       {items.length > 0 ? (
         items.map((item, index) => (
           <ProductCard
@@ -145,12 +183,13 @@ export default function Item() {
             quantity={item.quantity}
             price={item.price}
             Urls={item.Urls}
-            addToCart={addToCart} // Pass the addToCart function to ProductCard
+            addToCart={addToCart} 
           />
         ))
       ) : (
         <p>No items available</p>
       )}
+      </div>
     </>
   );
 }
